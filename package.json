@@ -1,0 +1,20 @@
+{
+  "name": "silosmc",
+  "productName": "SilosMC",
+  "version": "1.0.0",
+  "description": "SilosMC - local-first Minecraft server manager (Electron remake)",
+  "main": "main.js",
+  "author": "SilosMC",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  },
+  "allowScripts": {}
+}

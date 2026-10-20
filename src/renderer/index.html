@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SilosMC</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand"><div class="logo-mark">S</div><div class="brand-text"><div class="brand-name">SilosMC</div><div class="brand-sub">Local server host</div></div></div>
+<nav class="nav">
+<button class="nav-btn active" data-view="dashboard">Dashboard</button>
+<button class="nav-btn" data-view="instances">Instances</button>
+<button class="nav-btn" data-view="console">Console</button>
+<button class="nav-btn" data-view="mods">Content</button>
+<button class="nav-btn" data-view="backups">Backups</button>
+<button class="nav-btn" data-view="tunnels">Tunnels</button>
+<button class="nav-btn" data-view="settings">Settings</button>
+</nav>
+<div class="sidebar-foot"><div class="status-dot"></div><span>Ready</span></div>
+</aside>
+<main class="main">
+<section class="view active" id="view-dashboard">
+<header class="view-header"><h1>Dashboard</h1><div class="header-actions"><button class="btn primary" id="btnNewInstance">+ New Instance</button></div></header>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-label">Instances</div><div class="stat-value" id="statInstances">0</div></div>
+<div class="stat-card"><div class="stat-label">Running</div><div class="stat-value" id="statRunning">0</div></div>
+<div class="stat-card"><div class="stat-label">App Root</div><div class="stat-value small" id="statRoot">Not set</div></div>
+<div class="stat-card"><div class="stat-label">Version</div><div class="stat-value small" id="statVersion">-</div></div>
+</div>
+<div class="panel"><div class="panel-header">Recent Instances</div><div id="recentInstances" class="instance-list"></div></div>
+</section>
+<section class="view" id="view-instances">
+<header class="view-header"><h1>Instances</h1><div class="header-actions"><button class="btn primary" id="btnNewInstance2">+ New Instance</button></div></header>
+<div id="instancesList" class="instance-grid"></div>
+</section>
+<section class="view" id="view-console">
+<header class="view-header"><h1>Console</h1><div class="header-actions">
+<select id="consoleInstanceSelect"></select><input type="text" id="cmdInput" placeholder="Type a command..." /><button class="btn" id="btnSendCmd">Send</button>
+</div></header>
+<div class="console" id="consoleOutput"></div>
+</section>
+<section class="view" id="view-mods">
+<header class="view-header"><h1>Content & Add-ons</h1></header>
+<div class="panel"><p class="muted">Browse Modrinth, CurseForge and Poggit. Drag and drop .mcpack / .mcaddon files into an instance folder.</p>
+<div class="row"><button class="btn" id="btnOpenMods">Open Modrinth</button><button class="btn" id="btnOpenCurse">Open CurseForge</button></div></div>
+</section>
+<section class="view" id="view-backups">
+<header class="view-header"><h1>Backups</h1></header>
+<div class="panel"><p class="muted">Scheduled and manual backups with zip integrity verification. Cloud sync to Google Drive, OneDrive and Dropbox.</p></div>
+</section>
+<section class="view" id="view-tunnels">
+<header class="view-header"><h1>Tunnels (Playit.gg)</h1></header>
+<div class="panel"><p class="muted">Link your Playit.gg account to get a zero-config public join address.</p>
+<div class="row"><input type="text" id="playitToken" placeholder="Playit secret key" /><button class="btn primary">Save</button></div></div>
+</section>
+<section class="view" id="view-settings">
+<header class="view-header"><h1>Settings</h1></header>
+<div class="panel">
+<div class="field"><label>App Root Folder</label><div class="row"><input type="text" id="appRootInput" readonly /><button class="btn" id="btnPickRoot">Browse</button></div><small class="muted">Stores instances, runtimes, backups, logs and settings.</small></div>
+<div class="field"><label>Java Path (optional)</label><div class="row"><input type="text" id="javaPathInput" placeholder="Auto (java on PATH)" /><button class="btn" id="btnPickJava">Browse</button></div></div>
+<div class="field"><label>Theme</label><select id="themeSelect"><option value="dark">Dark</option><option value="light">Light</option></select></div>
+<button class="btn primary" id="btnSaveSettings">Save Settings</button>
+</div>
+</section>
+</main>
+</div>
+<div class="modal hidden" id="modalNewInstance">
+<div class="modal-card">
+<div class="modal-header"><h2>New Instance</h2><button class="icon-btn" id="btnCloseModal">✕</button></div>
+<div class="modal-body">
+<div class="field"><label>Name</label><input type="text" id="niName" value="My Server" /></div>
+<div class="field"><label>Server Type</label><select id="niType"><option value="paper">Paper</option><option value="vanilla">Vanilla Java</option><option value="fabric">Fabric</option><option value="forge">Forge</option><option value="neoforge">NeoForge</option><option value="bedrock">Bedrock Dedicated Server</option><option value="pocketmine">PocketMine-MP</option></select></div>
+<div class="field"><label>Version</label><input type="text" id="niVersion" value="latest" /></div>
+<div class="field-row"><div class="field"><label>Port</label><input type="number" id="niPort" value="25565" /></div><div class="field"><label>RAM (MB)</label><input type="number" id="niRam" value="2048" /></div></div>
+<div class="field-row"><div class="field"><label>Gamemode</label><select id="niGamemode"><option>survival</option><option>creative</option><option>adventure</option></select></div><div class="field"><label>Difficulty</label><select id="niDifficulty"><option>peaceful</option><option>easy</option><option selected>normal</option><option>hard</option></select></div></div>
+<div class="field"><label>Max Players</label><input type="number" id="niMax" value="20" /></div>
+<div class="field"><label>Seed (optional)</label><input type="text" id="niSeed" /></div>
+<div class="field checkbox"><input type="checkbox" id="niEula" /><label for="niEula">I accept the Minecraft EULA</label></div>
+</div>
+<div class="modal-footer"><button class="btn" id="btnCancelModal">Cancel</button><button class="btn primary" id="btnCreateInstance">Create</button></div>
+</div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

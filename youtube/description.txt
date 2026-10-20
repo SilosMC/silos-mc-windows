@@ -1,0 +1,10 @@
+SilosMC - Local-first Minecraft server manager for Windows, macOS & Linux.
+
+Run Paper, Fabric, Forge, NeoForge, Vanilla, Bedrock (BDS) and PocketMine-MP servers on your own PC with zero port forwarding. SilosMC auto-provisions Adoptium Java and PHP runtimes, provides a live console, backups, Modrinth/CurseForge content browser, and zero-config Playit.gg tunnels.
+
+Free and open source under the MIT License.
+Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.
+
+Download: https://silosmc.github.io
+GitHub: https://github.com/SilosMC/silos-mc-windows
+Discord: (add your link)
