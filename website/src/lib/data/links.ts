@@ -1,0 +1,9 @@
+export const repo = 'https://github.com/SilosMC/silos-mc-windows';
+export const discord = 'https://discord.gg/YOUR_DISCORD_INVITE';
+export const reddit = 'https://www.reddit.com/r/SilosMC/';
+export const youtube = 'https://www.youtube.com/@OfficialSilosMC';
+export const buymeacoffee = 'https://www.buymeacoffee.com/silosmc';
+export const website = 'https://github.com/SilosMC/silos-mc-website';
+export const org = 'https://github.com/SilosMC';
+export const email = 'contactdslabs@gmail.com';
+export const dslabs = 'https://silosmc.github.io/';

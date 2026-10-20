@@ -1,0 +1,23 @@
+{
+  "name": "silos-mc-website",
+  "version": "1.9.10",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "node scripts/inspect-repo.cjs && vite build && node scripts/sync-dist-html.cjs",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.18.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "puppeteer-core": "^25.14.0",
+    "sharp": "^0.35.5",
+    "svelte": "^5.22.0",
+    "svelte-check": "^4.1.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0"
+  }
+}

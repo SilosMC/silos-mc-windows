@@ -1,29 +1,23 @@
 # SilosMC
 
-Local-first Minecraft server manager. Electron remake of PocketMC, rebranded as SilosMC.
+Local-first Minecraft server manager. Monorepo containing the Electron desktop app and the marketing website.
 
-## Run
+## Structure
 
-```
-npm install
-npm start
-```
+- `app/` - Electron desktop app (SilosMC server manager). Run with `cd app && npm install && npm start`.
+- `website/` - SvelteKit marketing website. Run with `cd website && npm install && npm run dev`.
 
-## Features
+## App
 
-- Create and manage isolated Minecraft server instances (Paper, Fabric, Forge, NeoForge, Vanilla, Bedrock, PocketMine-MP)
-- Start / stop / kill servers with live console streaming
-- Per-instance ports, RAM, gamemode, difficulty, seed, max players
-- Auto EULA and server.properties generation
-- Settings: app root folder, Java path, theme
-- Content, backups and Playit.gg tunnel screens
+Electron remake of PocketMC, rebranded as SilosMC. Manages local Minecraft servers (Paper, Fabric, Forge, NeoForge, Vanilla, Bedrock, PocketMine-MP) with live console, backups, and Playit.gg tunnels.
+
+## Website
+
+Futuristic liquid-glass marketing site for SilosMC. No PocketMC copyrighted content.
 
 ## Assets
 
-YouTube branding assets are in `assets/`:
-- `youtube-profile.png` (800x800) - channel profile picture
-- `youtube-banner.png` (2560x1440) - channel banner
-- `logo.png`, `icon.ico` - app logo / icon
+YouTube branding assets: `app/assets/` (youtube-profile.png, youtube-banner.png, logo.png) and `app/youtube/` (profile-picture.png, banner.png, name.txt, description.txt).
 
 ## License
 

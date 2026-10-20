@@ -1,0 +1,356 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SilosMC Remote Control REST API",
+    "version": "1.9.10",
+    "description": "Embedded ASP.NET Core Kestrel HTTP & WebSocket API running locally on port 25580 for orchestrating local Minecraft servers, managing instances, streaming real-time console output, and managing files.",
+    "contact": {
+      "name": "SilosMC",
+      "url": "https://silosmc.github.io/docs/api/"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/SilosMC/silos-mc-windows/blob/master/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:25580",
+      "description": "Local Desktop Daemon Endpoint"
+    }
+  ],
+  "security": [
+    {
+      "CookieAuth": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Health probe",
+        "description": "Returns status ok when daemon is active.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Daemon is healthy and active.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ok" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "operationId": "login",
+        "summary": "Authenticate Remote Control session",
+        "description": "Authenticates user credentials and sets an HTTP-only RemoteCookies session cookie.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string", "example": "admin" },
+                  "password": { "type": "string", "example": "password" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful.",
+            "headers": {
+              "Set-Cookie": {
+                "schema": { "type": "string" },
+                "description": "Session cookie (RemoteCookies)"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials or missing fields."
+          },
+          "429": {
+            "description": "Rate limit exceeded (max 5 failed attempts per minute)."
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "operationId": "getStatus",
+        "summary": "Host status and user permissions",
+        "description": "Returns daemon status, local/public URLs, tunnel state, and session permissions.",
+        "responses": {
+          "200": {
+            "description": "Status payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": { "type": "boolean" },
+                    "hostRunning": { "type": "boolean" },
+                    "port": { "type": "integer", "example": 25580 },
+                    "accessMode": { "type": "string" },
+                    "localUrls": { "type": "array", "items": { "type": "string" } },
+                    "publicUrl": { "type": "string", "nullable": true },
+                    "tunnelRunning": { "type": "boolean" },
+                    "allowRemoteConsoleCommands": { "type": "boolean" },
+                    "allowRemotePlayerActions": { "type": "boolean" },
+                    "allowRemoteServerSettings": { "type": "boolean" },
+                    "allowRemoteServerAddons": { "type": "boolean" },
+                    "allowRemoteFileManager": { "type": "boolean" },
+                    "allowRemoteServerBackups": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/instances": {
+      "get": {
+        "operationId": "listInstances",
+        "summary": "List permitted instances",
+        "description": "Returns all server instances accessible to the authenticated session.",
+        "responses": {
+          "200": {
+            "description": "List of instance DTOs."
+          }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/status": {
+      "get": {
+        "operationId": "getInstanceStatus",
+        "summary": "Get instance runtime metrics",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Instance status including state, players, CPU, and RAM." },
+          "404": { "description": "Instance not found." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/start": {
+      "post": {
+        "operationId": "startInstance",
+        "summary": "Start server instance",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Instance starting." },
+          "400": { "description": "Failed to start instance." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/stop": {
+      "post": {
+        "operationId": "stopInstance",
+        "summary": "Stop server instance",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Instance stopping with RCON save-flush." },
+          "400": { "description": "Failed to stop instance." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/restart": {
+      "post": {
+        "operationId": "restartInstance",
+        "summary": "Restart server instance",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Instance restarting." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/console/history": {
+      "get": {
+        "operationId": "getConsoleHistory",
+        "summary": "Get buffered console logs",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of log line strings."
+          }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/console/command": {
+      "post": {
+        "operationId": "sendConsoleCommand",
+        "summary": "Submit command to server console",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["command"],
+                "properties": {
+                  "command": { "type": "string", "example": "say Server maintenance in 5 minutes" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Command transmitted to standard input." },
+          "429": { "description": "Rate limit exceeded (30 commands per minute)." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/players": {
+      "get": {
+        "operationId": "getPlayers",
+        "summary": "Get online players",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Player usernames and active count." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/players/{name}/{action}": {
+      "post": {
+        "operationId": "executePlayerAction",
+        "summary": "Execute moderation action on player",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "name", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "action", "in": "path", "required": true, "schema": { "type": "string", "enum": ["kick", "ban", "pardon", "op", "deop"] } }
+        ],
+        "responses": {
+          "200": { "description": "Player action executed." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/properties": {
+      "get": {
+        "operationId": "getProperties",
+        "summary": "Read server.properties",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Server properties DTO." }
+        }
+      },
+      "put": {
+        "operationId": "saveProperties",
+        "summary": "Save server.properties",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Properties saved successfully." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/addons": {
+      "get": {
+        "operationId": "getAddons",
+        "summary": "List installed plugins and mods",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Array of installed addon DTOs." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/files": {
+      "get": {
+        "operationId": "listFiles",
+        "summary": "List files in directory",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "path", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Directory listing items." }
+        }
+      },
+      "delete": {
+        "operationId": "deleteFile",
+        "summary": "Delete file or directory",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "path", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "File or folder deleted." }
+        }
+      }
+    },
+    "/api/instances/{instanceId}/backups": {
+      "get": {
+        "operationId": "listBackups",
+        "summary": "List backup archives",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "List of backup archives with checksum information." }
+        }
+      },
+      "post": {
+        "operationId": "triggerBackup",
+        "summary": "Trigger background backup",
+        "parameters": [
+          { "name": "instanceId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": { "description": "Backup initiated in background." }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "CookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "RemoteCookies",
+        "description": "ASP.NET Core session cookie issued by /api/login."
+      }
+    }
+  }
+}
