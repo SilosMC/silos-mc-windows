@@ -1,0 +1,17 @@
+PackageIdentifier: SilosMC.SilosMC
+PackageVersion: 1.0.0
+PackageLocale: en-US
+Publisher: SilosMC
+PublisherUrl: https://silosmc.github.io
+PackageName: SilosMC
+PackageUrl: https://silosmc.github.io
+License: MIT
+ShortDescription: Local-first Minecraft server manager for Windows
+Description: SilosMC is a local-first Minecraft server manager. Run Paper, Fabric, Forge, NeoForge, Vanilla, Bedrock and PocketMine-MP servers on your PC with zero port forwarding, automatic Java runtimes, live console, backups and Playit.gg tunnels.
+Tags:
+- minecraft
+- server
+- hosting
+- game
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0

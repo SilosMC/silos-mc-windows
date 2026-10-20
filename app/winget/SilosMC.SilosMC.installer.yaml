@@ -1,0 +1,14 @@
+PackageIdentifier: SilosMC.SilosMC
+PackageVersion: 1.0.0
+DefaultLocale: en-US
+ManifestType: installer
+InstallerType: zip
+NestedInstallerType: portable
+NestedInstallerFiles:
+- RelativeFilePath: app/SilosMC.bat
+  PortableCommandAlias: silosmc
+Installers:
+- Architecture: x64
+  InstallerUrl: https://github.com/SilosMC/silos-mc-windows/releases/download/v1.0.0/SilosMC-1.0.0-portable.zip
+  InstallerSha256: 44D654A5D45DA407BCCB1A6BF355178980FE57DEEADE38FDFD22792432F82DFC
+ManifestVersion: 1.6.0
